@@ -599,6 +599,22 @@ void  HID_API_EXPORT hid_free_enumeration(struct hid_device_info *devs)
 	}
 }
 
+void io_hid_device_callback(void *context, IOReturn result, void *sender, IOHIDDeviceRef device)
+{
+	
+	unsigned short vendor_id = get_vendor_id(device);
+	unsigned short product_id = get_product_id(device);
+	wchar_t serial_number[255];
+	get_serial_number(device, serial_number, sizeof(serial_number) / sizeof(wchar_t));	
+
+	((hid_monitor_callback)context)(vendor_id, product_id, serial_number);
+}
+
+void HID_API_EXPORT hid_monitor(hid_monitor_callback callback)
+{
+	IOHIDManagerRegisterDeviceMatchingCallback(hid_mgr, &io_hid_device_callback, (void*) callback);
+}
+
 hid_device * HID_API_EXPORT hid_open(unsigned short vendor_id, unsigned short product_id, const wchar_t *serial_number)
 {
 	/* This function is identical to the Linux version. Platform independent. */

@@ -178,6 +178,11 @@ extern "C" {
 		*/
 		void  HID_API_EXPORT HID_API_CALL hid_free_enumeration(struct hid_device_info *devs);
 
+		typedef void (*hid_monitor_callback)(unsigned short vendor_id, unsigned short product_id, const wchar_t *serial_number);
+
+		// Note: Mac only extension
+		HID_API_EXPORT void HID_API_CALL hid_monitor(hid_monitor_callback callback);
+
 		/** @brief Open a HID device using a Vendor ID (VID), Product ID
 			(PID) and optionally a serial number.
 
